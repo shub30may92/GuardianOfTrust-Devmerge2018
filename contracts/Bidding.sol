@@ -22,7 +22,7 @@ contract Bidding {
     uint private totalUsers;
     address private ownerAddress;
     uint public numOfCandidates;
-    uint private cycleNumber;
+    uint public cycleNumber;
 
 
     mapping( uint => Candidate ) public candidates;
@@ -44,7 +44,7 @@ contract Bidding {
         // ownerAddress.transfer(amount);
         numOfCandidates++;
         candidates[numOfCandidates].depositer = msg.sender;
-                candidates[numOfCandidates].hasWithdrawn = false;
+        candidates[numOfCandidates].hasWithdrawn = false;
         candidates[numOfCandidates].hasDeposited = true;
         cycles[cycleNumber].amountDeposited = cycles[cycleNumber].amountDeposited + amount;
     }
@@ -92,6 +92,7 @@ contract Bidding {
             candidates[i].hasDeposited = false;
             candidates[i].depositer = 0;
         }
+        numOfCandidates = 0;
     }
     
     function startCycle() private {

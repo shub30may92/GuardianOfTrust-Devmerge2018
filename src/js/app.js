@@ -58,46 +58,65 @@ App = {
     App.contracts.Bidding.deployed().then(function(instance) {
       console.log("found the contract");
       biddingInstance = instance;
-      return biddingInstance.candidates();
-    }).then(function(candidates) {
-      console.log("found the candidates");
+      return biddingInstance.numOfCandidates();
+    }).then(function(numOfCandidates) {
+      console.log("found the numOfCandidates: " + numOfCandidates);
       var candidatesResults = $("#candidatesResults");
       candidatesResults.empty();
-
       // var candidatesSelect = $('#candidatesSelect');
       // candidatesSelect.empty();
       console.log("iterate");
-      for (var candidateId = 1; i <= candidates; i++) {
+      var hasWithDrawn;
+      var hasDeposited;
+      var depositer;
+      for (var candidateId = 1; candidateId <= numOfCandidates; candidateId++) {
+        console.log("Candidate-ID: " + candidateId);
         biddingInstance.candidates(candidateId).then(function(candidate) {
-          var hasWithDrawn = candidate[0];
-          var hasDeposited = candidate[1];
-          var depositer = candidate[2];
-          // var balance = web3.eth.getBalance(depositer)
-
-          // Render candidate Result
-          var candidateTemplate = "<tr><th>" + candidateId + "</th><td>" + depositer + "</td><td>" + hasWithDrawn + "</td></tr>"
-          candidatesResults.append(candidateTemplate);
-          console.log("got users");
-
-          // // Render candidate ballot option
-          // var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
-          // candidatesSelect.append(candidateOption);
+          var id = candidateId;
+          hasWithDrawn = candidate[0];
+          hasDeposited = candidate[1];
+          depositer = candidate[2];
+          var candidateTemplate;
+          web3.eth.getBalance(candidate[2], function(error, balance) {
+            if(error) {
+              candidateTemplate = "<tr><th>" + id + "</th><td>" + depositer + "</td><td> - </td></tr>"
+            } else {
+              balance = web3.fromWei(balance);
+              // Render candidate Result
+              candidateTemplate = "<tr><th>" + id + "</th><td>" + depositer + "</td><td>" + balance + "</td></tr>"
+            }
+            candidatesResults.append(candidateTemplate);
+            console.log("got users");
+          });
         });
       }
-      // return biddingInstance.voters(App.account);
       console.log("going to display");
       loader.hide();
       content.show();
-    // }).then(function(hasVoted) {
-    //   // Do not allow a user to vote
-    //   if(hasVoted) {
-    //     $('form').hide();
-    //   }
-    //   loader.hide();
-    //   content.show();
     }).catch(function(error) {
       console.warn(error);
     });
+  },
+
+  deposit: function() {
+    var depositButton = $('#depositButton');
+    App.contracts.Bidding.deployed().then(function(instance) {
+      var app = instance;
+      app.deposit({from: App.account,value: web3.toWei(5, 'ether')})
+    }).then(function(result) {
+      console.log("Deposited your amount");
+    });
+  },
+
+  withdraw: function() {
+    var withdrawButton = $('#withdrawButton');
+    App.contracts.Bidding.deployed().then(function(instance) {
+      var app = instance;
+      // Take input from user
+      app.withdraw(10, {from: App.account})
+    }).then(function(result) {
+      console.log("Amount Withdrawn");
+    })
   },
 
 };

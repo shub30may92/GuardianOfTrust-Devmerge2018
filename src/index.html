@@ -19,6 +19,7 @@
   </head>
   <body>
     <body>
+      <div id="contractBalance">Contract Balance: </div>
     <div class="container" style="width: 650px;">
       <div class="row">
         <div class="col-lg-12">
@@ -50,6 +51,10 @@
               <button type="submit" class="btn btn-primary">Deposit</button>
               <hr />
             </form> -->
+            <div>
+              <button id="depositButton" onclick="App.deposit();">DEPOSIT</button>
+              <button id="withdrawButton" onclick="App.withdraw();">WITHDRAW</button>
+            </div>
             <p id="accountAddress" class="text-center"></p>
           </div>
         </div>
