@@ -1,5 +1,7 @@
 pragma solidity ^0.4.2;
+
 contract Bidding {
+
     struct Candidate {
         bool hasWithdrawn;
         bool hasDeposited;
@@ -14,14 +16,18 @@ contract Bidding {
         uint amountRmaining;
         uint amountDeposited;
     }
+
     uint private amount; // constant
     uint private totalDeposit; // constant
     uint private totalUsers;
     address private ownerAddress;
     uint public numOfCandidates;
     uint private cycleNumber;
-    mapping( uint => Candidate ) private candidates;
-    mapping( uint => Cycle ) private cycles;
+
+
+    mapping( uint => Candidate ) public candidates;
+    mapping( uint => Cycle ) public cycles;
+
     constructor () public {
         ownerAddress = msg.sender;
         totalUsers = 3;
@@ -29,6 +35,7 @@ contract Bidding {
         totalDeposit = 15;
         startCycle();
     }
+
     
     
     function deposit() payable public {
@@ -41,6 +48,7 @@ contract Bidding {
         candidates[numOfCandidates].hasDeposited = true;
         cycles[cycleNumber].amountDeposited = cycles[cycleNumber].amountDeposited + amount;
     }
+
     function withdraw(uint _amount) public {
         uint candidateId = 0;
         for(uint i=1; i<=numOfCandidates; i++) {
@@ -63,6 +71,7 @@ contract Bidding {
         clean();
         startCycle();
     }
+
     function distribute() private {
         uint amountToBeDistriuted = toWei(cycles[cycleNumber].amountRmaining)/(numOfCandidates-1);
         for(uint i=1; i<=numOfCandidates; i++) {
@@ -70,6 +79,7 @@ contract Bidding {
                 candidates[i].depositer.transfer(amountToBeDistriuted);
             }
         }
+
     }
     
     function toWei(uint _eth) private pure returns (uint256 result) {
@@ -94,5 +104,5 @@ contract Bidding {
         cycles[cycleNumber].amountRmaining = 0;
     }
     
-    
 }
+
