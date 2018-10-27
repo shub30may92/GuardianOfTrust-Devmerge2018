@@ -58,13 +58,21 @@ App = {
     App.contracts.Bidding.deployed().then(function(instance) {
       console.log("found the contract");
       biddingInstance = instance;
+      var contractBalance = $('#contractBalance');
+      contractBalance.empty();
+      var contractBalanceTemplate;
+      web3.eth.getBalance(biddingInstance.address, function(error, result) {
+        if(error) {
+          $('#contractBalance').html("Contract Balance: -" );
+        } else {
+          $('#contractBalance').html("Contract Balance: " + web3.fromWei(result));
+        }
+      });
       return biddingInstance.numOfCandidates();
     }).then(function(numOfCandidates) {
       console.log("found the numOfCandidates: " + numOfCandidates);
       var candidatesResults = $("#candidatesResults");
       candidatesResults.empty();
-      // var candidatesSelect = $('#candidatesSelect');
-      // candidatesSelect.empty();
       console.log("iterate");
       var hasWithDrawn;
       var hasDeposited;
