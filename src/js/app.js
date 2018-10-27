@@ -87,11 +87,11 @@ App = {
           var candidateTemplate;
           web3.eth.getBalance(candidate[2], function(error, balance) {
             if(error) {
-              candidateTemplate = "<tr><th>" + id + "</th><td>" + depositer + "</td><td> - </td></tr>"
+              candidateTemplate = "<tr><td>" + candidate[2] + "</td><td> - </td></tr>"
             } else {
               balance = web3.fromWei(balance);
               // Render candidate Result
-              candidateTemplate = "<tr><th>" + id + "</th><td>" + depositer + "</td><td>" + balance + "</td></tr>"
+              candidateTemplate = "<tr><td>" + candidate[2] + "</td><td>" + balance + "</td></tr>"
             }
             candidatesResults.append(candidateTemplate);
             console.log("got users");
