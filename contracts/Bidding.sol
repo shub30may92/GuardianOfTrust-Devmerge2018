@@ -42,9 +42,16 @@ contract Bidding {
         // chk if user has not already deposited
         // makes deposit to the particular month cycle
         // ownerAddress.transfer(amount);
+
+        require (msg.value == toWei(amount));
+        
+        if(numOfCandidates >0 ) {
+            for(uint i=1; i<=numOfCandidates; i++) {
+                require(candidates[i].depositer != msg.sender);
+                }
+        }
         numOfCandidates++;
         candidates[numOfCandidates].depositer = msg.sender;
-        candidates[numOfCandidates].hasWithdrawn = false;
         candidates[numOfCandidates].hasDeposited = true;
         cycles[cycleNumber].amountDeposited = cycles[cycleNumber].amountDeposited + amount;
         emit depositEvent(numOfCandidates);
@@ -61,6 +68,7 @@ contract Bidding {
         require(!cycles[cycleNumber].isWithdrawn);
         require(candidateId>0);
         require(candidates[candidateId].hasDeposited);
+        require(!candidates[candidateId].hasWithdrawn);
         require(totalDeposit == cycles[cycleNumber].amountDeposited);  // check if all users have deposited
         msg.sender.transfer(toWei(_amount));
         candidates[candidateId].hasWithdrawn = true;
@@ -90,14 +98,19 @@ contract Bidding {
     
     function clean() private {
         for(uint i=1; i<=numOfCandidates; i++) {
-            candidates[i].hasWithdrawn = false;
+            if(cycleNumber == totalUsers) {
+                candidates[i].hasWithdrawn = false;
+                candidates[i].depositer = 0;
+            }
             candidates[i].hasDeposited = false;
-            candidates[i].depositer = 0;
         }
         numOfCandidates = 0;
     }
     
     function startCycle() private {
+        if(cycleNumber == totalUsers) {
+            cycleNumber = 0;
+        }
         cycleNumber++;
         cycles[cycleNumber].month = cycleNumber;
         cycles[cycleNumber].isWithdrawn = false;
