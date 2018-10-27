@@ -47,7 +47,7 @@ App = {
       }).watch(function(error, event) {
         console.log("depositEvent triggered", event)
         // Reload when a new vote is recorded
-        refresh = true;
+        App.refresh = true;
         App.render();
       });
       instance.withdrawEvent({}, {
@@ -56,7 +56,7 @@ App = {
       }).watch(function(error, event) {
         console.log("withdrawEvent triggered", event)
         // Reload when a new vote is recorded
-        refresh = true;
+        App.refresh = true;
         App.render();
       });
     });
@@ -107,7 +107,7 @@ App = {
       var hasWithDrawn;
       var hasDeposited;
       var depositer;
-      if(refresh) {
+      if(App.refresh) {
       for (var candidateId = 1; candidateId <= numOfCandidates; candidateId++) {
         console.log("Candidate-ID: " + candidateId);
         biddingInstance.candidates(candidateId).then(function(candidate) {
@@ -129,7 +129,7 @@ App = {
           });
         });
       }
-      refresh = false;
+      App.refresh = false;
     }
       console.log("going to display");
       loader.hide();
