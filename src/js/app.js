@@ -87,6 +87,9 @@ App = {
       console.log("found the contract");
       // $("#candidatesResults").empty();
       biddingInstance = instance;
+      biddingInstance.cycleNumber().then(function(cycle) {
+        $('#contractCycle').html("Contract Cycle: " + cycle);
+      });
       var contractBalance = $('#contractBalance');
       // contractBalance.empty();
       var contractBalanceTemplate;
@@ -126,6 +129,7 @@ App = {
             }
             candidatesResults.append(candidateTemplate);
             console.log("got users");
+            
           });
         });
       }
