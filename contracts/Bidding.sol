@@ -47,6 +47,7 @@ contract Bidding {
         candidates[numOfCandidates].hasWithdrawn = false;
         candidates[numOfCandidates].hasDeposited = true;
         cycles[cycleNumber].amountDeposited = cycles[cycleNumber].amountDeposited + amount;
+        emit depositEvent(numOfCandidates);
     }
 
     function withdraw(uint _amount) public {
@@ -70,6 +71,7 @@ contract Bidding {
         distribute();
         clean();
         startCycle();
+        emit withdrawEvent(candidateId);
     }
 
     function distribute() private {
@@ -104,6 +106,13 @@ contract Bidding {
         cycles[cycleNumber].amountWithdrawn = 0;
         cycles[cycleNumber].amountRmaining = 0;
     }
+
+    event depositEvent (
+        uint indexed _candidateId
+    );
     
+    event withdrawEvent (
+        uint indexed _candidateId
+    );
 }
 

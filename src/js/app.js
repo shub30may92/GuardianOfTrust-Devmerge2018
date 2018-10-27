@@ -2,7 +2,8 @@ App = {
   web3Provider: null,
   contracts: {},
   account: '0x0',
-  hasVoted: false,
+  refresh: false,
+
 
   init: function() {
     return App.initWeb3();
@@ -28,9 +29,36 @@ App = {
       // Connect provider to interact with contract
       App.contracts.Bidding.setProvider(App.web3Provider);
 
-      // App.listenForEvents();
+      App.listenForEvents();
 
       return App.render();
+    });
+  },
+
+  // Listen for events emitted from the contract
+  listenForEvents: function() {
+    App.contracts.Bidding.deployed().then(function(instance) {
+      // Restart Chrome if you are unable to receive this event
+      // This is a known issue with Metamask
+      // https://github.com/MetaMask/metamask-extension/issues/2393
+      instance.depositEvent({}, {
+        fromBlock: 0,
+        toBlock: 'latest'
+      }).watch(function(error, event) {
+        console.log("depositEvent triggered", event)
+        // Reload when a new vote is recorded
+        refresh = true;
+        App.render();
+      });
+      instance.withdrawEvent({}, {
+        fromBlock: 0,
+        toBlock: 'latest'
+      }).watch(function(error, event) {
+        console.log("withdrawEvent triggered", event)
+        // Reload when a new vote is recorded
+        refresh = true;
+        App.render();
+      });
     });
   },
 
@@ -41,7 +69,7 @@ App = {
 
     loader.show();
     content.hide();
-    
+
     console.log("showing loader");
 
     // Load account data
@@ -57,9 +85,10 @@ App = {
     // Load contract data
     App.contracts.Bidding.deployed().then(function(instance) {
       console.log("found the contract");
+      // $("#candidatesResults").empty();
       biddingInstance = instance;
       var contractBalance = $('#contractBalance');
-      contractBalance.empty();
+      // contractBalance.empty();
       var contractBalanceTemplate;
       web3.eth.getBalance(biddingInstance.address, function(error, result) {
         if(error) {
@@ -67,6 +96,7 @@ App = {
         } else {
           $('#contractBalance').html("Contract Balance: " + web3.fromWei(result));
         }
+        $('#contractAddress').html("Contract Address: " + biddingInstance.address);
       });
       return biddingInstance.numOfCandidates();
     }).then(function(numOfCandidates) {
@@ -77,6 +107,7 @@ App = {
       var hasWithDrawn;
       var hasDeposited;
       var depositer;
+      if(refresh) {
       for (var candidateId = 1; candidateId <= numOfCandidates; candidateId++) {
         console.log("Candidate-ID: " + candidateId);
         biddingInstance.candidates(candidateId).then(function(candidate) {
@@ -98,6 +129,8 @@ App = {
           });
         });
       }
+      refresh = false;
+    }
       console.log("going to display");
       loader.hide();
       content.show();
@@ -124,7 +157,7 @@ App = {
       app.withdraw(10, {from: App.account})
     }).then(function(result) {
       console.log("Amount Withdrawn");
-    })
+    });
   },
 
 };
