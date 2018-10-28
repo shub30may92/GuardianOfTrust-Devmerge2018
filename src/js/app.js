@@ -58,16 +58,16 @@ App = {
     App.contracts.Bidding.deployed().then(function(instance) {
       console.log("found the contract");
       biddingInstance = instance;
-      return biddingInstance.numOfCandidates();
-    }).then(function(numOfCandidates) {
-      console.log("found the numOfCandidates");
+      return biddingInstance.candidates();
+    }).then(function(candidates) {
+      console.log("found the candidates");
       var candidatesResults = $("#candidatesResults");
       candidatesResults.empty();
 
       // var candidatesSelect = $('#candidatesSelect');
       // candidatesSelect.empty();
       console.log("iterate");
-      for (var candidateId = 1; i <= numOfCandidates; i++) {
+      for (var candidateId = 1; i <= candidates; i++) {
         biddingInstance.candidates(candidateId).then(function(candidate) {
           var hasWithDrawn = candidate[0];
           var hasDeposited = candidate[1];
