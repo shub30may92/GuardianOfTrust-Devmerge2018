@@ -143,6 +143,12 @@ App = {
     });
   },
 
+  getWithdrawAmount: function() { 
+    var withdrawAmount = $('#inputWithdrawAmount').value;
+    console.log("Amount: " + withdrawAmount);
+    return withdrawAmount;
+  },
+
   deposit: function() {
     var depositButton = $('#depositButton');
     App.contracts.Bidding.deployed().then(function(instance) {
@@ -158,7 +164,7 @@ App = {
     App.contracts.Bidding.deployed().then(function(instance) {
       var app = instance;
       // Take input from user
-      app.withdraw(10, {from: App.account})
+      app.withdraw(App.getWithdrawAmount(), {from: App.account})
     }).then(function(result) {
       console.log("Amount Withdrawn");
     });
