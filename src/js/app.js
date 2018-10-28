@@ -3,6 +3,7 @@ App = {
   contracts: {},
   account: '0x0',
   refresh: false,
+  contractTotalBalance: 0,
 
 
   init: function() {
@@ -98,7 +99,8 @@ App = {
         if(error) {
           $('#contractBalance').html("Contract Balance: -" );
         } else {
-          $('#contractBalance').html("Contract Balance: " + web3.fromWei(result));
+          contractTotalBalance = web3.fromWei(result);
+          $('#contractBalance').html("Contract Balance: " + contractTotalBalance);
         }
         $('#contractAddress').html("Contract Address: " + biddingInstance.address);
       });
@@ -146,8 +148,13 @@ App = {
 
   getWithdrawAmount: function() { 
     var withdrawAmount = $('#inputWithdrawAmount').val();
-    console.log("Amount: " + withdrawAmount);
-    return withdrawAmount;
+    console.log("contractTotalBalance: " + contractTotalBalance);
+    if(parseInt(withdrawAmount) < contractTotalBalance) {
+      console.log("Amount: " + withdrawAmount);
+      return withdrawAmount;
+    } else {
+      alert("Please enter amount less than contract balance");
+    }
   },
 
   deposit: function() {
