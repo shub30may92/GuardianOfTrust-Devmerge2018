@@ -57,6 +57,7 @@ App = {
         console.log("withdrawEvent triggered", event)
         // Reload when a new vote is recorded
         App.refresh = true;
+        $('#inputWithdrawAmount').val("");
         App.render();
       });
     });
@@ -144,7 +145,7 @@ App = {
   },
 
   getWithdrawAmount: function() { 
-    var withdrawAmount = $('#inputWithdrawAmount').value;
+    var withdrawAmount = $('#inputWithdrawAmount').val();
     console.log("Amount: " + withdrawAmount);
     return withdrawAmount;
   },
