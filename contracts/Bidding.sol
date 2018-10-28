@@ -85,7 +85,7 @@ contract Bidding {
     function distribute() private {
         uint amountToBeDistriuted = toWei(cycles[cycleNumber].amountRmaining)/(numOfCandidates-1);
         for(uint i=1; i<=numOfCandidates; i++) {
-            if(candidates[i].hasWithdrawn == false){
+            if(candidates[i].depositer != msg.sender){
                 candidates[i].depositer.transfer(amountToBeDistriuted);
             }
         }
