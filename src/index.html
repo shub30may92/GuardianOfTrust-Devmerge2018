@@ -24,7 +24,19 @@
         <div class="col-lg-12">
           <h1 class="text-center">GoT Chits : Safe & Simple</h1>
           <hr/>
-          <br/>
+          <table class="table">
+              <thead>
+                <tr>
+                  <td><h4> Contract Installment: 5</h4></td>
+                  <td><h4 id="contractBalance"> </h4></td>
+                </tr>
+                <tr>
+                  <td><b id="contractCycle"></b></td>
+                  <td><b id="contractAddress"></b></td>
+                </tr>
+              </thead>
+            </table>
+          <hr />
           <div id="loader">
             <p class="text-center">Loading...</p>
           </div>
@@ -32,8 +44,8 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">User</th>
+<!--                   <th scope="col">#</th>
+ -->                  <th scope="col">User</th>
                   <th scope="col">Balance</th>
                 </tr>
               </thead>
@@ -51,6 +63,10 @@
               <hr />
             </form> -->
             <p id="accountAddress" class="text-center"></p>
+            <div class="text-center">
+              <button id="depositButton" onclick="App.deposit();">DEPOSIT</button>
+              <button id="withdrawButton" onclick="App.withdraw();">WITHDRAW</button>
+            </div>
           </div>
         </div>
       </div>
